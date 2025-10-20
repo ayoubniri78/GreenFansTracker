@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "hibernate-configuration-3.0.dtd">
+
+
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- Connexion à MySQL -->
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">
+            jdbc:mysql://localhost:3306/greenfanstracker?useSSL=false&amp;serverTimezone=UTC
+        </property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password"></property>
+
+        <!-- Dialecte MySQL -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+        <!-- Afficher les requêtes SQL -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Mise à jour automatique des tables -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Mapping des entités -->
+       
+         <mapping class="dev.ayoub.SupporterService.model.Supporter"/>
+         <mapping class="dev.ayoub.SupporterService.model.AuthToken"/>
+        <!-- 
+        <mapping class="dev.ayoub.model.Utilisateur"/>
+        <mapping class="dev.ayoub.model.Produit"/>
+        <mapping class="dev.ayoub.model.Commande"/>
+         -->
+
+    </session-factory>
+</hibernate-configuration>

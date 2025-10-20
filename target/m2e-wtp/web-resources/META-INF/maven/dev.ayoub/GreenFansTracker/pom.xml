@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>dev.ayoub</groupId>
+  <artifactId>GreenFansTracker</artifactId>
+  <packaging>war</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>GreenFansTracker Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+	    <groupId>jakarta.servlet</groupId>
+	    <artifactId>jakarta.servlet-api</artifactId>
+	    <version>5.0.0</version>
+	    <scope>provided</scope>
+	</dependency>
+	    <!-- Hibernate Core -->
+    <dependency>
+        <groupId>org.hibernate.orm</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>6.4.0.Final</version> <!-- prends la version stable la plus récente -->
+    </dependency>
+
+    <!-- JPA API -->
+    <dependency>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
+        <version>3.1.0</version>
+    </dependency>
+
+    <!-- Driver JDBC pour MySQL (ou ton SGBD) -->
+	<dependency>
+    	<groupId>com.mysql</groupId>
+    	<artifactId>mysql-connector-j</artifactId>
+    	<version>8.1.0</version>
+	</dependency>
+	
+	<dependency>
+    	<groupId>org.projectlombok</groupId>
+    	<artifactId>lombok</artifactId>
+    	<version>1.18.34</version> <!-- ou la plus récente -->
+    	<scope>provided</scope>
+	</dependency>
+	
+	<dependency>
+    	<groupId>jakarta.validation</groupId>
+   		<artifactId>jakarta.validation-api</artifactId>
+    	<version>3.0.2</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.hibernate.validator</groupId>
+	    <artifactId>hibernate-validator</artifactId>
+	    <version>8.0.1.Final</version>
+	</dependency>
+	<!-- Dependence pour encrytpion-->
+	<dependency>
+    	<groupId>org.mindrot</groupId>
+    	<artifactId>jbcrypt</artifactId>
+    	<version>0.4</version>
+	</dependency>
+    <!-- Optionnel : Logging pour Hibernate -->
+    <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging</artifactId>
+        <version>3.5.0.Final</version>
+    </dependency>
+    
+    <!-- JJWT API -->
+	<dependency>
+	    <groupId>io.jsonwebtoken</groupId>
+	    <artifactId>jjwt-api</artifactId>
+	    <version>0.11.5</version>
+	</dependency>
+	
+	<!-- JJWT Implementation -->
+	<dependency>
+	    <groupId>io.jsonwebtoken</groupId>
+	    <artifactId>jjwt-impl</artifactId>
+	    <version>0.11.5</version>
+	    <scope>runtime</scope>
+	</dependency>
+	
+	<!-- JJWT Jackson (pour JSON processing) -->
+	<dependency>
+	    <groupId>io.jsonwebtoken</groupId>
+	    <artifactId>jjwt-jackson</artifactId>
+	    <version>0.11.5</version>
+	    <scope>runtime</scope>
+	</dependency>
+  </dependencies>
+  <build>
+    <finalName>GreenFansTracker</finalName>
+  </build>
+</project>
