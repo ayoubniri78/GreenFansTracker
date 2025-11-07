@@ -29,6 +29,8 @@
        
          <mapping class="dev.ayoub.SupporterService.model.Supporter"/>
          <mapping class="dev.ayoub.SupporterService.model.AuthToken"/>
+         <mapping class="dev.ayoub.ScoreService.model.Score"/>
+         <mapping class="dev.ayoub.ScoreService.model.Ranking"/>
         <!-- 
         <mapping class="dev.ayoub.model.Utilisateur"/>
         <mapping class="dev.ayoub.model.Produit"/>

@@ -29,8 +29,8 @@ public class AuthController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.getWriter().append("Served at: ").append(request.getContextPath());
     }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
         String action=request.getParameter("action");
         if ("login".equalsIgnoreCase(action)) {
             login(request, response);
@@ -40,10 +40,12 @@ public class AuthController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Action non reconnue");
         }
     }
+    
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	String email=request.getParameter("email");
     	String password=request.getParameter("password");
     	Credentials c=new Credentials(email, password);
+    	
     	AuthService a1 = new AuthServiceImpl();
     	try {
     		a1.authenticate(c);

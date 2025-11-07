@@ -11,24 +11,31 @@ import jakarta.persistence.*;
 	@Table(name="Supporter")
 	@Data
 public class Supporter {
+		
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	@NonNull
 	@Column(unique = true, nullable = false)
 	private String email;
+	
 	@NonNull
 	private String phoneNumber;
+	
 	@NonNull
 	private String password;
+	
 	private String teamFavorite;
+	
 	@Setter
 	private Date creationDate;
+	
 	@OneToOne(mappedBy = "supporter")
 	private AuthToken authToken;
-	public Supporter() {
-        // Constructeur par défaut requis par Hibernate
-    }
+	
+	public Supporter() {}
+	
 	public Supporter(String email2, String phone, String hashedPassword) {
 		this.email=email2;
 		this.phoneNumber=phone;

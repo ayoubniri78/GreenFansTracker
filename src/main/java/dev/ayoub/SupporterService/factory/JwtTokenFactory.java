@@ -1,6 +1,7 @@
 package dev.ayoub.SupporterService.factory;
 
 import dev.ayoub.SupporterService.model.AuthToken;
+
 import dev.ayoub.SupporterService.model.Supporter;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
