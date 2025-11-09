@@ -20,8 +20,8 @@ public class JwtTokenFactory implements TokenFactory {
         System.out.println(" Factory - Création token pour: " + s.getEmail());
         
         String token = Jwts.builder()
-                .setSubject(s.getEmail())
-                .claim("id", s.getId())
+                .setSubject(String.valueOf(s.getId()))
+                .claim("email", s.getEmail())
                 .claim("phone", s.getPhoneNumber())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))

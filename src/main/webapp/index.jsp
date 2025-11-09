@@ -26,7 +26,7 @@
                 
                 <!-- Image Coupe d'Afrique des Nations -->
                 <div class="bg-white rounded-2xl p-4 shadow-lg">
-                    <img src="assets/images/login/image_du_coupe_bg_vert.jpg" 
+                    <img src="assets/images/login/image_du_coupe_bg_vert.png" 
                          alt="Coupe d'Afrique des Nations 2025 Maroc" 
                          class="w-full h-auto rounded-xl">
                 </div>

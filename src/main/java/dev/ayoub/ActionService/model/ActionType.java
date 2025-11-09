@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name="ActionType")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 
 public class ActionType {
 	
@@ -28,7 +29,6 @@ public class ActionType {
 	private int defaultPoints;
 
 	public ActionType(String name, int defaultPoints) {
-		super();
 		this.name = name;
 		this.defaultPoints = defaultPoints;
 	}

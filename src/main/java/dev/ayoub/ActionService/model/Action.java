@@ -2,6 +2,7 @@ package dev.ayoub.ActionService.model;
 
 import java.io.InputStream;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import jakarta.persistence.*;
@@ -9,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="Action")
+@Table(name = "Action")
 @Data
 @NoArgsConstructor
 
@@ -28,17 +29,15 @@ public class Action {
 	private STATUS status = STATUS.PENDING;
 
 	private Date submissionDate;
-	
-	private String detail;
-	
-	
+
+	private String details;
+
 	@ElementCollection
-    @CollectionTable(name = "action_validation_votes", 
-                     joinColumns = @JoinColumn(name = "action_id"))
-    @MapKeyColumn(name = "supporter_id")
-    @Column(name = "vote_value")
-	
-	Map<String, Integer> votes; //<vote,idSuppVoter>
+	@CollectionTable(name = "action_validation_votes", joinColumns = @JoinColumn(name = "action_id"))
+	@MapKeyColumn(name = "supporter_id")
+	@Column(name = "vote_value")
+
+	Map<String, Integer> votes; // <vote,idSuppVoter>
 
 	private String mediaFileName;
 	private String mediaFileType;
@@ -58,7 +57,7 @@ public class Action {
 		this.points = points;
 		this.status = status;
 		this.submissionDate = submissionDate;
-		this.detail = detail;
+		this.details = detail;
 		this.votes = votes;
 		this.mediaFileName = mediaFileName;
 		this.mediaFileType = mediaFileType;
@@ -66,20 +65,18 @@ public class Action {
 	}
 //	Action submitAction(int suppId,String type,String detail,int points,InputStream fileStream,String fileName,String fileType);
 
-	public Action(int supporterId, String type,String detail, int points,  
-			 String mediaFileName, String mediaFileType, String mediaFilePath) {
-		
+	public Action(int supporterId, String type, String details, int points, String mediaFileName, String mediaFileType,
+			String mediaFilePath) {
 		this.supporterId = supporterId;
 		this.type = type;
+		this.details = details; 
 		this.points = points;
-		submissionDate = new Date(System.currentTimeMillis());
-		this.detail = detail;
-		this.votes = null;
+		this.submissionDate = new java.sql.Date(System.currentTimeMillis());
+		this.status = STATUS.PENDING; 
+		this.votes = new HashMap<>(); 
 		this.mediaFileName = mediaFileName;
 		this.mediaFileType = mediaFileType;
 		this.mediaFilePath = mediaFilePath;
 	}
-	
-	
 
 }

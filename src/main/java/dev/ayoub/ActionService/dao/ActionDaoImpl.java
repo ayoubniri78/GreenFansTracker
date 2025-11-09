@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import dev.ayoub.ActionService.model.Action;
 import dev.ayoub.ActionService.model.STATUS;
@@ -13,22 +14,47 @@ import dev.ayoub.util.HibernateUtil;
 
 public class ActionDaoImpl implements ActionDao {
 
+//	@Override
+//	public void saveAction(Action action) {
+//		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+//			if (ValideAction.estActionValide(action)) {
+//				s.beginTransaction();
+//				s.save(action);
+//				s.getTransaction().commit();
+//				System.out.println("Action sauvgarder " + action.getId());
+//			}
+//			else {
+//				System.out.println("Action non enregistrer");
+//			}
+//
+//		} catch (Exception e) {
+//			System.out.println("Erreur dans SaveAction "+e.getMessage());
+//		}
+//	}
 	@Override
 	public void saveAction(Action action) {
-		try (Session s = HibernateUtil.getSessionFactory().openSession()) {
-			if (ValideAction.estActionValide(action)) {
-				s.beginTransaction();
-				s.save(action);
-				s.getTransaction().commit();
-				System.out.println("Action sauvgarder " + action.getId());
-			}
-			else {
-				System.out.println("Action non enregistrer");
-			}
+	    Session s = null;
+	    Transaction tx = null;
+	    try {
+	        s = HibernateUtil.getSessionFactory().openSession();
+	        tx = s.beginTransaction();
 
-		} catch (Exception e) {
-			System.out.println("Erreur dans SaveAction "+e.getMessage());
-		}
+	        if (ValideAction.estActionValide(action)) {
+	            s.save(action);
+	            tx.commit();
+	            System.out.println("Action sauvegardée : ID = " + action.getId());
+	        } else {
+	            tx.rollback(); // Annule la transaction
+	            System.out.println("Action REJETÉE : validation échouée");
+	        }
+
+	    } catch (Exception e) {
+	        if (tx != null) tx.rollback();
+	        System.err.println("ERREUR SAVE : " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        if (s != null && s.isOpen()) s.close();
+	    }
 	}
 
 	@Override
