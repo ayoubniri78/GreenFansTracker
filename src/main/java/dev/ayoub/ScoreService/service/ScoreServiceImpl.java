@@ -122,7 +122,6 @@ public class ScoreServiceImpl implements ScoreService {
 		try {
 			System.out.println("🚀 DÉBUT - Génération des scores...");
 
-			// 1. Récupérer les actions validées
 			List<Action> validatedActions = getAllValidatedActions();
 			System.out.println("📋 " + validatedActions.size() + " actions validées trouvées");
 
@@ -131,14 +130,12 @@ public class ScoreServiceImpl implements ScoreService {
 				return;
 			}
 
-			// 2. Calculer les scores
 			Map<Integer, Integer> scoresMap = new HashMap<>();
 			for (Action action : validatedActions) {
 				int supporterId = action.getSupporterId();
 				scoresMap.put(supporterId, scoresMap.getOrDefault(supporterId, 0) + action.getPoints());
 			}
 
-			// 3. Sauvegarder les scores
 			java.sql.Date now = new java.sql.Date(System.currentTimeMillis());
 			for (Map.Entry<Integer, Integer> entry : scoresMap.entrySet()) {
 				int supporterId = entry.getKey();

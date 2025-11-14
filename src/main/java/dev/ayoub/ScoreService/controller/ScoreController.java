@@ -138,7 +138,6 @@ public class ScoreController extends HttpServlet {
     }
     private void checkValidatedActions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            // Vérifier combien d'actions validées existent
             try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                 String hql = "SELECT COUNT(*) FROM Action WHERE status = :status";
                 Long count = session.createQuery(hql, Long.class)

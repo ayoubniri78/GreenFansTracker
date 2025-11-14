@@ -17,12 +17,12 @@ public class Score {
     
     private int supporterId;
     
-    private int totalScore;  // CORRECT - même nom que la base
+    private int totalScore;  
     
     private Date lastUpdate;
     
     @Column(name = "`rank`")
-    private int rank = 0;    // Valeur par défaut
+    private int rank = 0;    
 
     public Score(int supporterId, int totalScore) {
         this.supporterId = supporterId;
