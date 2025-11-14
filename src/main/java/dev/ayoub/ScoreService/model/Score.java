@@ -1,39 +1,33 @@
 package dev.ayoub.ScoreService.model;
 
-import java.sql.Date;
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.ToString;
+import java.sql.Date;
 
-
-@ToString
 @Entity
-@Table(name="Score")
+@Table(name = "Score")
 @Data
 @NoArgsConstructor
-
 public class Score {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
-	
-	private int supporterId;
-	
-	private int totalPoints;
-	
-	private Date lastUpdate;
-	
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    
+    private int supporterId;
+    
+    private int totalScore;  // CORRECT - même nom que la base
+    
+    private Date lastUpdate;
+    
+    @Column(name = "`rank`")
+    private int rank = 0;    // Valeur par défaut
 
-	public Score(int supporterId, int totalPoints,Date lastUp) {
-		this.supporterId = supporterId;
-		this.totalPoints = totalPoints;
-		this.lastUpdate=lastUp;
-	}
-	
-	
+    public Score(int supporterId, int totalScore) {
+        this.supporterId = supporterId;
+        this.totalScore = totalScore;
+        this.lastUpdate = new Date(System.currentTimeMillis());
+        this.rank = 0;
+    }
 }

@@ -104,7 +104,7 @@
                     </form>
                     
                     <p class="text-center text-gray-600">
-                        <a href="Test" class="text-green-600 hover:text-green-700 font-semibold">
+                        <a href="#" class="text-green-600 hover:text-green-700 font-semibold">
                             Mot de passe oublié ?
                         </a>
                     </p>
@@ -240,14 +240,6 @@
         .font-arabic {
             font-family: system-ui, -apple-system, sans-serif;
         }
-        
-        /* Style pour le sélecteur avec images */
-        select option {
-            padding: 8px;
-            background-repeat: no-repeat;
-            background-position: left 8px center;
-            padding-left: 30px;
-        }
     </style>
     <script>
     const { createApp, ref, computed, watch, onMounted } = Vue;
@@ -280,6 +272,52 @@
             
             // Liste des pays (vide au début, remplie par API)
             const countries = ref([]);
+            
+            // ✅ NOUVELLE FONCTION : Valider le token côté serveur
+            const validateTokenWithServer = async (token) => {
+                try {
+                    console.log('🔍 Validation du token côté serveur...');
+                    const response = await fetch('AuthController?action=validateToken', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    });
+                    
+                    console.log('📡 Statut validation token:', response.status);
+                    return response.ok;
+                } catch (error) {
+                    console.error('🚨 Erreur validation token:', error);
+                    return false;
+                }
+            };
+            
+            // ✅ CORRECTION : Vérification améliorée de l'authentification existante
+            const checkExistingAuth = async () => {
+                const existingToken = localStorage.getItem('jwtToken');
+                console.log('🔍 État initial localStorage:');
+                console.log('jwtToken:', existingToken);
+                
+                if (existingToken) {
+                    console.log('🔄 Token trouvé, validation côté serveur...');
+                    
+                    const isValid = await validateTokenWithServer(existingToken);
+                    
+                    if (isValid) {
+                        console.log('✅ Token valide, redirection vers dashboard');
+                        window.location.href = 'dashboard.jsp';
+                    } else {
+                        console.log('❌ Token invalide côté serveur, nettoyage');
+                        localStorage.removeItem('jwtToken');
+                        localStorage.removeItem('userId');
+                        localStorage.removeItem('currentUser');
+                        // Reste sur la page de login
+                    }
+                } else {
+                    console.log('ℹ️ Aucun token trouvé, affichage formulaire login');
+                }
+            };
             
             // ✅ Récupérer les pays depuis l'API externe avec vraies images
             const fetchCountries = async () => {
@@ -338,9 +376,10 @@
                 { code: 'EG', name: 'Égypte', dialCode: '+20', flag: 'https://flagcdn.com/w40/eg.png' }
             ];
             
-            // ✅ Charger les pays au démarrage
-            onMounted(() => {
-                fetchCountries();
+            // ✅ Charger les pays et vérifier l'authentification au démarrage
+            onMounted(async () => {
+                await fetchCountries();
+                await checkExistingAuth();
             });
             
             const validatePassword = () => {
@@ -402,12 +441,15 @@
             
             const handleLogin = async () => {
                 isLoading.value = true;
+                console.log('🔄 Début de la connexion...');
                 
                 try {
                     const formData = new URLSearchParams();
                     formData.append('action', 'login');
                     formData.append('email', loginForm.value.email);
                     formData.append('password', loginForm.value.password);
+                    
+                    console.log('📤 Envoi requête login:', loginForm.value.email);
                     
                     const response = await fetch('AuthController', {
                         method: 'POST',
@@ -418,20 +460,34 @@
                     });
                     
                     const result = await response.json();
+                    console.log('📥 Réponse serveur:', result);
                     
                     if (result.success) {
+                        // ✅ Stocker le JWT dans localStorage
+                        if (result.token) {
+                            localStorage.setItem('jwtToken', result.token);
+                            localStorage.setItem('userId', result.userId);
+                            console.log('✅ JWT stocké dans localStorage:', result.token.substring(0, 20) + '...');
+                            console.log('✅ UserId stocké:', result.userId);
+                        } else {
+                            console.error('❌ Token manquant dans la réponse');
+                            showMessage('Erreur: Token manquant', 'error');
+                            return;
+                        }
+                        
                         showMessage('Marhba bik! ' + result.message + ' 🎉', 'success');
                         
-                        if (result.redirect) {
-                            setTimeout(() => {
-                                window.location.href = result.redirect;
-                            }, 1000);
-                        }
+                        // Redirection après succès
+                        setTimeout(() => {
+                            window.location.href = result.redirect || 'dashboard.jsp';
+                        }, 1000);
                     } else {
+                        console.error('❌ Erreur de connexion:', result.error);
                         showMessage(result.error, 'error');
                     }
                     
                 } catch (error) {
+                    console.error('❌ Erreur fetch:', error);
                     showMessage('Erreur de connexion au serveur', 'error');
                 } finally {
                     isLoading.value = false;
@@ -440,14 +496,16 @@
             
             const handleRegister = async () => {
                 isLoading.value = true;
+                console.log('🔄 Début de l\'inscription...');
                 
                 try {
                     const formData = new URLSearchParams();
                     formData.append('action', 'register');
                     formData.append('email', registerForm.value.email);
-                    // ✅ Envoyer le numéro complet avec code international
                     formData.append('phone', registerForm.value.phoneCode + registerForm.value.phone);
                     formData.append('password', registerForm.value.password);
+                    
+                    console.log('📤 Envoi requête register:', registerForm.value.email);
                     
                     const response = await fetch('AuthController', {
                         method: 'POST',
@@ -458,23 +516,34 @@
                     });
                     
                     const result = await response.json();
+                    console.log('📥 Réponse serveur:', result);
                     
                     if (result.success) {
+                        // ✅ Stocker le JWT dans localStorage
+                        if (result.token) {
+                            localStorage.setItem('jwtToken', result.token);
+                            localStorage.setItem('userId', result.userId);
+                            console.log('✅ JWT stocké dans localStorage:', result.token.substring(0, 20) + '...');
+                            console.log('✅ UserId stocké:', result.userId);
+                        } else {
+                            console.error('❌ Token manquant dans la réponse');
+                            showMessage('Erreur: Token manquant', 'error');
+                            return;
+                        }
+                        
                         showMessage('Bienvenue! ' + result.message + ' 🌱', 'success');
+                        
+                        // Redirection après succès
                         setTimeout(() => {
-                            currentForm.value = 'login';
-                            registerForm.value = { 
-                                email: '', 
-                                phoneCode: '+212', 
-                                phone: '', 
-                                password: '' 
-                            };
-                        }, 2000);
+                            window.location.href = result.redirect || 'dashboard.jsp';
+                        }, 1000);
                     } else {
+                        console.error('❌ Erreur d\'inscription:', result.error);
                         showMessage(result.error, 'error');
                     }
                     
                 } catch (error) {
+                    console.error('❌ Erreur fetch:', error);
                     showMessage('Erreur de connexion au serveur', 'error');
                 } finally {
                     isLoading.value = false;

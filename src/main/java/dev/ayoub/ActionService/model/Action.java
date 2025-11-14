@@ -32,12 +32,22 @@ public class Action {
 
 	private String details;
 
-	@ElementCollection
+//	@ElementCollection
+//	@CollectionTable(name = "action_validation_votes", joinColumns = @JoinColumn(name = "action_id"))
+//	@MapKeyColumn(name = "supporter_id")
+//	@Column(name = "vote_value")
+//
+//	Map<String, Integer> votes; // <vote,idSuppVoter>
+//	@ElementCollection(fetch = FetchType.EAGER)
+//	@CollectionTable(name = "action_validation_votes", joinColumns = @JoinColumn(name = "action_id"))
+//	@MapKeyColumn(name = "vote_type")        // Clé : type de vote (String)
+//	@Column(name = "supporter_count")        // Valeur : nombre de votes (Integer)
+//	private Map<String, Integer> votes;      // <vote_type, count>
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "action_validation_votes", joinColumns = @JoinColumn(name = "action_id"))
-	@MapKeyColumn(name = "supporter_id")
-	@Column(name = "vote_value")
-
-	Map<String, Integer> votes; // <vote,idSuppVoter>
+	@MapKeyColumn(name = "supporter_id")        
+	@Column(name = "vote_value")                
+	private Map<Integer, String> votes;         
 
 	private String mediaFileName;
 	private String mediaFileType;
@@ -50,7 +60,7 @@ public class Action {
 	}
 
 	public Action(int supporterId, String type, int points, STATUS status, Date submissionDate, String detail,
-			Map<String, Integer> votes, String mediaFileName, String mediaFileType, String mediaFilePath) {
+			Map<Integer, String> votes, String mediaFileName, String mediaFileType, String mediaFilePath) {
 		super();
 		this.supporterId = supporterId;
 		this.type = type;

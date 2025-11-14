@@ -3,6 +3,7 @@ package dev.ayoub.SupporterService.model;
 import java.util.Date;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Table(name="AuthToken")
 @RequiredArgsConstructor
-
+@Data
 public class AuthToken {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

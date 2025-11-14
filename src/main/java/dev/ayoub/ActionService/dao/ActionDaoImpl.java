@@ -1,6 +1,7 @@
 package dev.ayoub.ActionService.dao;
 
 import java.util.List;
+
 import java.util.Map;
 
 import org.hibernate.Hibernate;
@@ -99,7 +100,6 @@ public class ActionDaoImpl implements ActionDao {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
             s.beginTransaction();
 
-            // Récupère l'action existante
             Action existing = s.get(Action.class, action.getId());
             if (existing == null) {
                 System.out.println("Action non trouvée pour update : ID " + action.getId());
@@ -107,14 +107,14 @@ public class ActionDaoImpl implements ActionDao {
                 return;
             }
 
-            // Met à jour les champs nécessaires
+            
             existing.setStatus(action.getStatus());
 
-            // Met à jour les votes
-            Map<String, Integer> newVotes = action.getVotes();
+            
+            Map<Integer, String> newVotes = action.getVotes();
             if (newVotes != null) {
-                existing.getVotes().clear(); // Vide les anciens
-                existing.getVotes().putAll(newVotes); // Ajoute les nouveaux
+                existing.getVotes().clear(); 
+                existing.getVotes().putAll(newVotes); 
             }
 
             s.merge(existing);
@@ -125,5 +125,44 @@ public class ActionDaoImpl implements ActionDao {
             e.printStackTrace();
         }
     }
+	@Override
+	public List<Action> findActionsBySupporter(int supporterId) {
+	    try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+	        String hql = "FROM Action WHERE supporterId = :supporterId ORDER BY submissionDate DESC";
+	        List<Action> userActions = s.createQuery(hql, Action.class)
+	                .setParameter("supporterId", supporterId)
+	                .list();
+	        System.out.println("Actions trouvées pour supporter " + supporterId + ": " + userActions.size());
+	        return userActions;
+	    } catch (Exception e) {
+	        System.out.println("Erreur dans findActionsBySupporter: " + e.getMessage());
+	        e.printStackTrace();
+	        return List.of();
+	    }
+	}
+
+	@Override
+	public List<Action> findRecentValidatedActions() {
+	    try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+	        String hql = "FROM Action WHERE status = :status ORDER BY submissionDate DESC";
+	        List<Action> communityActions = s.createQuery(hql, Action.class)
+	                .setParameter("status", STATUS.VALIDATED)
+	                .setMaxResults(6) 
+	                .list();
+	        System.out.println("Actions communautaires trouvées: " + communityActions.size());
+	        return communityActions;
+	    } catch (Exception e) {
+	        System.out.println("Erreur dans findRecentValidatedActions: " + e.getMessage());
+	        e.printStackTrace();
+	        return List.of();
+	    }
+	}
+	// ActionDaoImpl.java
+	@Override
+	public List<Action> findAllWithMedia() {
+	    try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+	        return s.createQuery("FROM Action WHERE mediaFilePath IS NOT NULL", Action.class).list();
+	    }
+	}
 
 }
